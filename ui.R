@@ -1,4 +1,4 @@
-myUI <- shinyUI({dashboardPage(
+ui <- shinyUI({dashboardPage(
     dashboardHeader(color = "blue", title = "Dashboard", inverted = TRUE),
     # dashboardHeader(color = "blue"),
     dashboardSidebar(

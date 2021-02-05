@@ -1,6 +1,6 @@
 source('connection.R', local = TRUE)
 
-myServer <- shinyServer(function(input, output, session) {
+server <- shinyServer(function(input, output, session) {
 
   ## Time Series
   output$ts <- renderPlotly({

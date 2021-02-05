@@ -1,0 +1,13 @@
+name: twitter-shiny
+title: twitter-shiny
+username:
+account: ferri-halim
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3585924
+bundleId: 4182913
+url: https://ferri-halim.shinyapps.io/twitter-shiny/
+when: 1612488663.6637
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|README.md|data/assets/colloquial-indonesian-lexicon.csv|data/assets/negative.txt|data/assets/positive.txt|data/assets/stopword_ID.txt|tests/shinytest.R|tests/shinytest/mytest.R|text_processing/cleanText.R|text_processing/sentimentScore.R
