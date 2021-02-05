@@ -12,19 +12,18 @@ library(tidyverse)
 library(tidytext)
 library(mongolite)
 
-
-source('ui.R', local = TRUE)
-source('server.R', local = TRUE)
+# source('ui.R', local = TRUE)
+# source('server.R', local = TRUE)
 # LOCAL
-shinyApp(
-    ui = ui,
-    server = server
-)
-
+# shinyApp(
+#     ui = ui,
+#     server = server
+# )
+# shiny::runApp()
 # CLOUD
 # port <- Sys.getenv('PORT')
-# shiny::runApp(
-#   appDir = getwd(),
-#   host = '0.0.0.0',
-#   port = as.numeric(port)
-# )
+shiny::runApp(
+  appDir = getwd(),
+  host = '0.0.0.0',
+  port = as.numeric(port)
+)
