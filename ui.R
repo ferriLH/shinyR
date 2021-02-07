@@ -1,6 +1,5 @@
 ui <- shinyUI({dashboardPage(
     dashboardHeader(color = "blue", title = "Dashboard", inverted = TRUE),
-    # dashboardHeader(color = "blue"),
     dashboardSidebar(
       size = "thin", color = "blue",
       sidebarMenu(
@@ -28,16 +27,9 @@ ui <- shinyUI({dashboardPage(
         tabItem(
           tabName = "rank",
           fluidRow(
-            # box(width = 8,
-            #     title = "Top 10 Location",
-            #     color = "blue", ribbon = TRUE, title_side = "top right",
-            #     column(width = 8,
-            #            # plotlyOutput("place")
-            #     )
-            # ),
             box(width = 8,
                 title = "Ranking akun paling aktif men-tweet terkait covid-19",
-                color = "blue", ribbon = TRUE, title_side = "top right",
+                color = "blue", ribbon = TRUE, title_side = "top right",collapsible = TRUE,
                 column(width = 8,
                        tags$div(
                          HTML("Empat akun teratas yang aktif men-<i>tweet</i> tentang Covid-19 adalah 
@@ -45,33 +37,40 @@ ui <- shinyUI({dashboardPage(
                        )),
                        plotlyOutput("mostActive")
                 )
+            ),
+            box(width = 8,
+                title = "peringkat tagar yang paling banyak digunakan di tweet tentang covid-19",
+                color = "blue", ribbon = TRUE, title_side = "top right",collapsible = TRUE,
+                column(width = 8,
+                       tags$div(
+                         HTML("Tiga peringkat teratas penggunaan hashtag adalah
+                         <b style='color:'#de2d26;'>covid19 hashtag</b>
+                         dengan huruf besar dan kecil yang berbeda"
+                         )),
+                       # plotlyOutput("usedHashtag")
+                )
             )
           ),
           fluidRow(
             box(width = 8,
                 title = "Ranking akun paling banyak di-mention",
-                color = "blue", ribbon = TRUE, title_side = "top right",
+                color = "blue", ribbon = TRUE, title_side = "top right",collapsible = TRUE,
                 column(width = 8,
                        tags$div(
                          HTML("akun yang paling banyak di-<i>mention</i> 
                          <b style='color:'#de2d26;'>di dominasi oleh akun yang
                          terkait dengan Pemerintahan</b>"
                        )),
-                       plotlyOutput("mostMentioned")
+                       # plotlyOutput("mostMentioned")
                 )
             ),
-            box(width = 8,
-                title = "peringkat tagar yang paling banyak digunakan di tweet tentang covid-19",
-                color = "blue", ribbon = TRUE, title_side = "top right",
-                column(width = 8,
-                       tags$div(
-                         HTML("Tiga peringkat teratas penggunaan hashtag adalah
-                         <b style='color:'#de2d26;'>covid19 hashtag</b>
-                         dengan huruf besar dan kecil yang berbeda"
-                       )),
-                       plotlyOutput("usedHashtag")
-                )
-            )
+            # box(width = 8,
+            #     title = "Top 10 Location",
+            #     color = "blue", ribbon = TRUE, title_side = "top right",
+            #     column(width = 8,
+            #            # plotlyOutput("place")
+            #     )
+            # )
           )
         ),
         tabItem(
@@ -102,6 +101,9 @@ ui <- shinyUI({dashboardPage(
           # )
         # )
       )
-    ), theme = "cerulean"
+    ),
+    theme = "cerulean",
+    suppress_bootstrap = TRUE,
+    margin = FALSE
   )
 })

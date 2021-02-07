@@ -87,76 +87,76 @@ server <- shinyServer(function(input, output, session) {
       )
   })
   
-  ## Most mentioned
-  mentioned <- df_tweets %>%
-    unnest_tokens(mentions, text, "tweets", to_lower = FALSE) %>%
-    filter(str_detect(mentions, "^@")) %>%
-    count(mentions, sort = TRUE) %>%
-    top_n(10)
-  # mentioned1 <- mentioned %>% top_n(1)
-  output$mostMentioned <- renderPlotly({
-    plot_ly(x = c(mentioned$n [order(mentioned$n)]),
-            y = c(mentioned$mentions [order(mentioned$n)]),
-            type = 'bar', orientation = 'h',
-            # text = c("","","","","","","","","",paste0(mentioned1$n," total mentioned")),
-            # textposition = 'auto',
-            marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
-                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
-                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
-                                    'rgba(222, 45, 38,0.6)','rgba(58, 71, 80, 0.6)'),
-                          line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
-                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
-                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
-                                                'rgba(222, 45, 38,1.0)','rgba(58, 71, 80, 1.0)'),
-                                      width = 3))
-    )%>%
-      layout(
-        # title = "",
-        # xaxis = list(title = ""),
-        yaxis = list(#title = "",
-          type = "category",
-          categoryorder = "array",
-          categoryarray = mentioned$n [order(mentioned$n)])
-      )
-  })
-
-  ## Most used hashtag
-  hashtag <- df_tweets %>%
-    unnest_tokens(hashtag, text, "tweets", to_lower = FALSE) %>%
-    filter(str_detect(hashtag, "^#")) %>%
-    count(hashtag, sort = TRUE) %>%
-    top_n(10)
-  # hashtag1 <- hashtag %>% top_n(1)
-  output$usedHashtag <- renderPlotly({
-    plot_ly(x = c(hashtag$n [order(hashtag$n)]),
-            y = c(hashtag$hashtag [order(hashtag$n)]),
-            type = 'bar',
-            orientation = 'h',
-            # text = c("","","","","","","","","",paste0(hashtag1$n," total used")),
-            # textposition = 'auto',
-            marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-                                    'rgba(58, 71, 80, 0.6)','rgba(222, 45, 38,0.6)',
-                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
-                          line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-                                                'rgba(58, 71, 80, 1.0)','rgba(222, 45, 38,1.0)',
-                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
-                                      width = 3))
-    )%>%
-      layout(
-        #title = "",
-        # xaxis = list(title = ""),
-        yaxis = list(#title = "",
-          type = "category",
-          categoryorder = "array",
-          categoryarray = hashtag$n [order(hashtag$n)])
-      )
-  })
+  # ## Most mentioned
+  # mentioned <- df_tweets %>%
+  #   unnest_tokens(mentions, text, "tweets", to_lower = FALSE) %>%
+  #   filter(str_detect(mentions, "^@")) %>%
+  #   count(mentions, sort = TRUE) %>%
+  #   top_n(10)
+  # # mentioned1 <- mentioned %>% top_n(1)
+  # output$mostMentioned <- renderPlotly({
+  #   plot_ly(x = c(mentioned$n [order(mentioned$n)]),
+  #           y = c(mentioned$mentions [order(mentioned$n)]),
+  #           type = 'bar', orientation = 'h',
+  #           # text = c("","","","","","","","","",paste0(mentioned1$n," total mentioned")),
+  #           # textposition = 'auto',
+  #           marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
+  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
+  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
+  #                                   'rgba(222, 45, 38,0.6)','rgba(58, 71, 80, 0.6)'),
+  #                         line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
+  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
+  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
+  #                                               'rgba(222, 45, 38,1.0)','rgba(58, 71, 80, 1.0)'),
+  #                                     width = 3))
+  #   )%>%
+  #     layout(
+  #       # title = "",
+  #       # xaxis = list(title = ""),
+  #       yaxis = list(#title = "",
+  #         type = "category",
+  #         categoryorder = "array",
+  #         categoryarray = mentioned$n [order(mentioned$n)])
+  #     )
+  # })
+  # 
+  # ## Most used hashtag
+  # hashtag <- df_tweets %>%
+  #   unnest_tokens(hashtag, text, "tweets", to_lower = FALSE) %>%
+  #   filter(str_detect(hashtag, "^#")) %>%
+  #   count(hashtag, sort = TRUE) %>%
+  #   top_n(10)
+  # # hashtag1 <- hashtag %>% top_n(1)
+  # output$usedHashtag <- renderPlotly({
+  #   plot_ly(x = c(hashtag$n [order(hashtag$n)]),
+  #           y = c(hashtag$hashtag [order(hashtag$n)]),
+  #           type = 'bar',
+  #           orientation = 'h',
+  #           # text = c("","","","","","","","","",paste0(hashtag1$n," total used")),
+  #           # textposition = 'auto',
+  #           marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+  #                                   'rgba(58, 71, 80, 0.6)','rgba(222, 45, 38,0.6)',
+  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
+  #                         line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+  #                                               'rgba(58, 71, 80, 1.0)','rgba(222, 45, 38,1.0)',
+  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
+  #                                     width = 3))
+  #   )%>%
+  #     layout(
+  #       #title = "",
+  #       # xaxis = list(title = ""),
+  #       yaxis = list(#title = "",
+  #         type = "category",
+  #         categoryorder = "array",
+  #         categoryarray = hashtag$n [order(hashtag$n)])
+  #     )
+  # })
   
   # SENTIMENT
   hitung <- count(df_tweetsCleaned,df_tweetsCleaned$score)
@@ -190,7 +190,6 @@ server <- shinyServer(function(input, output, session) {
             text = ~paste('jumlah score =', jumlah),
             marker = list(colors = colors,
             line = list(color = '#FFFFFF', width = 1)),
-            #The 'pull' attribute can also be used to create space between the sectors
             showlegend = FALSE
     )%>% 
       layout(
@@ -198,9 +197,6 @@ server <- shinyServer(function(input, output, session) {
         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
-  
-  
-  
   
   output$dataTable <- renderDataTable(df_tweetsCleaned, class = 'cell-border stripe')
   

@@ -2,7 +2,7 @@
 library(shiny)
 library(shiny.semantic)
 library(semantic.dashboard)
-library(plyr)
+# library(plyr)
 library(ggplot2)
 library(plotly)
 library(DT)
