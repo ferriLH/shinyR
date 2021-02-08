@@ -35,7 +35,7 @@ ui <- shinyUI({dashboardPage(
                          HTML("Empat akun teratas yang aktif men-<i>tweet</i> tentang Covid-19 adalah 
                          <b style='color:'#de2d26;'>akun kepolisian</b>"
                        )),
-                       plotlyOutput("mostActive")
+                       # plotlyOutput("mostActive")
                 )
             ),
             box(width = 8,

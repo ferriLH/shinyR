@@ -52,41 +52,41 @@ server <- shinyServer(function(input, output, session) {
   #      )
   # })
   
-  ## Most Active
-  active <- df_tweets %>%
-    count(screen_name, sort = TRUE) %>%
-    top_n(10) %>%
-    mutate(screen_name = paste0("@", screen_name))
-  # active1 <- active %>% top_n(1)
-  output$mostActive <- renderPlotly({
-    plot_ly(x = c(active$n [order(active$n)]),
-            y = c(active$screen_name [order(active$n)]),
-            type = 'bar',
-            orientation = 'h',
-            # text = c("","","","","","","","","",paste0(active1$n," total tweets")),
-            # textposition = 'auto',
-            marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
-                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
-                          line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
-                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
-                                      width = 3))
-    )%>%
-      layout(
-        # title = "",
-        # xaxis = list(title = ""),
-        yaxis = list(#title = "",
-          type = "category",
-          categoryorder = "array",
-          categoryarray = active$n [order(active$n)])
-      )
-  })
-  
+  # ## Most Active
+  # active <- df_tweets %>%
+  #   count(screen_name, sort = TRUE) %>%
+  #   top_n(10) %>%
+  #   mutate(screen_name = paste0("@", screen_name))
+  # # active1 <- active %>% top_n(1)
+  # output$mostActive <- renderPlotly({
+  #   plot_ly(x = c(active$n [order(active$n)]),
+  #           y = c(active$screen_name [order(active$n)]),
+  #           type = 'bar',
+  #           orientation = 'h',
+  #           # text = c("","","","","","","","","",paste0(active1$n," total tweets")),
+  #           # textposition = 'auto',
+  #           marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
+  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
+  #                         line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
+  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
+  #                                     width = 3))
+  #   )%>%
+  #     layout(
+  #       # title = "",
+  #       # xaxis = list(title = ""),
+  #       yaxis = list(#title = "",
+  #         type = "category",
+  #         categoryorder = "array",
+  #         categoryarray = active$n [order(active$n)])
+  #     )
+  # })
+  # 
   # ## Most mentioned
   # mentioned <- df_tweets %>%
   #   unnest_tokens(mentions, text, "tweets", to_lower = FALSE) %>%
