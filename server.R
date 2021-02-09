@@ -1,12 +1,12 @@
 
 server <- shinyServer(function(input, output, session) {
-
+  
   ## Time Series
   output$ts <- renderPlotly({
     progress <- Progress$new(session, min=0, max=15)
     on.exit(progress$close())
     
-    progress$set(message = 'Penghitungan sedang berlangsung',
+    progress$set(message = 'Pengambilan Data dan Penghitungan sedang berlangsung',
                  detail = 'Ini mungkin memakan waktu cukup lama...')
     
     for (i in 1:15) {
