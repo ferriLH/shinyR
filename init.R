@@ -19,4 +19,3 @@ install_if_missing = function(p){
 }
 
 invisible(sapply(my_packages, install_if_missing))
-# invisible(devtools::install_github("rstudio/pool"))

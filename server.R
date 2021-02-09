@@ -1,162 +1,150 @@
-source('connection.R', local = TRUE)
 
 server <- shinyServer(function(input, output, session) {
 
   ## Time Series
   output$ts <- renderPlotly({
+    progress <- Progress$new(session, min=0, max=15)
+    on.exit(progress$close())
+    
+    progress$set(message = 'Penghitungan sedang berlangsung',
+                 detail = 'Ini mungkin memakan waktu cukup lama...')
+    
+    for (i in 1:15) {
+      progress$set(value = i)
+      Sys.sleep(0.5)
+    }
     ts_plot(df_tweets, "days", trim = 0L, tz ="UTC") +
       ggplot2::theme_minimal() +
       ggplot2::theme(plot.title = ggplot2::element_text(face = "bold")) +
       ggplot2::labs(
         x = NULL, y = NULL,
-        title = "Frequency of tweets about covid-19",
+        title = "Frekuensi tweet tentang covid-19",
         subtitle =paste0(strftime(min(df_tweets$created_at), "%d %B %Y"), " to ", strftime(max(df_tweets$created_at),"%d %B %Y")),
-        caption = "\nSource: Data collected from Twitter's REST API via rtweet"
+        caption = "\nSource: Data dikumpulkan dari REST API Twitter melalui rtweet"
       )
   })
   
-  ## Place
-  # place <- df_tweets %>%
-  #   filter(!is.na(place_full_name)) %>%
-  #   #arrange(location) %>%
-  #   count(place_full_name) %>%
-  #   na.omit() %>%
-  #   top_n(10)
-  # place1 <- place %>% top_n(1)
-  # output$place <- renderPlotly({
-  #   plot_ly(x = c(place$n [order(place$n)]), 
-  #           y = c(  place$place_full_name [order(place$n)]), 
-  #           type = 'bar',
-  #           orientation = 'h',
-  #           text = c("","","","","","","","","",paste0(place1$n," of tweets")), 
-  #           textposition = 'auto',
-  #           marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(222, 45, 38,0.6)'),
-  #                         line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(222, 45, 38,1.0)'),
-  #                                     width = 3))
-  #            )%>%
-  #      layout(
-  #        # title = "",
-  #        # xaxis = list(title = ""),
-  #        yaxis = list(#title = "",
-  #                     type = "category",
-  #                     categoryorder = "array",
-  #                     categoryarray = place$n [order(place$n)])
-  #      )
-  # })
-  
-  # ## Most Active
-  # active <- df_tweets %>%
-  #   count(screen_name, sort = TRUE) %>%
-  #   top_n(10) %>%
-  #   mutate(screen_name = paste0("@", screen_name))
-  # # active1 <- active %>% top_n(1)
-  # output$mostActive <- renderPlotly({
-  #   plot_ly(x = c(active$n [order(active$n)]),
-  #           y = c(active$screen_name [order(active$n)]),
-  #           type = 'bar',
-  #           orientation = 'h',
-  #           # text = c("","","","","","","","","",paste0(active1$n," total tweets")),
-  #           # textposition = 'auto',
-  #           marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
-  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
-  #                         line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
-  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
-  #                                     width = 3))
-  #   )%>%
-  #     layout(
-  #       # title = "",
-  #       # xaxis = list(title = ""),
-  #       yaxis = list(#title = "",
-  #         type = "category",
-  #         categoryorder = "array",
-  #         categoryarray = active$n [order(active$n)])
-  #     )
-  # })
-  # 
-  # ## Most mentioned
-  # mentioned <- df_tweets %>%
-  #   unnest_tokens(mentions, text, "tweets", to_lower = FALSE) %>%
-  #   filter(str_detect(mentions, "^@")) %>%
-  #   count(mentions, sort = TRUE) %>%
-  #   top_n(10)
-  # # mentioned1 <- mentioned %>% top_n(1)
-  # output$mostMentioned <- renderPlotly({
-  #   plot_ly(x = c(mentioned$n [order(mentioned$n)]),
-  #           y = c(mentioned$mentions [order(mentioned$n)]),
-  #           type = 'bar', orientation = 'h',
-  #           # text = c("","","","","","","","","",paste0(mentioned1$n," total mentioned")),
-  #           # textposition = 'auto',
-  #           marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
-  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
-  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
-  #                                   'rgba(222, 45, 38,0.6)','rgba(58, 71, 80, 0.6)'),
-  #                         line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
-  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
-  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
-  #                                               'rgba(222, 45, 38,1.0)','rgba(58, 71, 80, 1.0)'),
-  #                                     width = 3))
-  #   )%>%
-  #     layout(
-  #       # title = "",
-  #       # xaxis = list(title = ""),
-  #       yaxis = list(#title = "",
-  #         type = "category",
-  #         categoryorder = "array",
-  #         categoryarray = mentioned$n [order(mentioned$n)])
-  #     )
-  # })
-  # 
-  # ## Most used hashtag
-  # hashtag <- df_tweets %>%
-  #   unnest_tokens(hashtag, text, "tweets", to_lower = FALSE) %>%
-  #   filter(str_detect(hashtag, "^#")) %>%
-  #   count(hashtag, sort = TRUE) %>%
-  #   top_n(10)
-  # # hashtag1 <- hashtag %>% top_n(1)
-  # output$usedHashtag <- renderPlotly({
-  #   plot_ly(x = c(hashtag$n [order(hashtag$n)]),
-  #           y = c(hashtag$hashtag [order(hashtag$n)]),
-  #           type = 'bar',
-  #           orientation = 'h',
-  #           # text = c("","","","","","","","","",paste0(hashtag1$n," total used")),
-  #           # textposition = 'auto',
-  #           marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-  #                                   'rgba(58, 71, 80, 0.6)','rgba(222, 45, 38,0.6)',
-  #                                   'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
-  #                         line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-  #                                               'rgba(58, 71, 80, 1.0)','rgba(222, 45, 38,1.0)',
-  #                                               'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
-  #                                     width = 3))
-  #   )%>%
-  #     layout(
-  #       #title = "",
-  #       # xaxis = list(title = ""),
-  #       yaxis = list(#title = "",
-  #         type = "category",
-  #         categoryorder = "array",
-  #         categoryarray = hashtag$n [order(hashtag$n)])
-  #     )
-  # })
+  ## Most Active
+  output$mostActive <- renderPlotly({
+    progress <- Progress$new(session, min=0, max=15)
+    on.exit(progress$close())
+    
+    progress$set(message = 'Penghitungan akun paling aktif sedang berlangsung',
+                 detail = 'Ini mungkin memakan waktu cukup lama...')
+    
+    for (i in 1:15) {
+      progress$set(value = i)
+      Sys.sleep(0.5)
+    }
+    active <- df_tweets %>%
+      count(screen_name, sort = TRUE) %>%
+      top_n(10) %>%
+      mutate(screen_name = paste0("@", screen_name))
+    plot_ly(x = c(active$n [order(active$n)]),
+            y = c(active$screen_name [order(active$n)]),
+            type = 'bar',
+            orientation = 'h',
+            marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
+                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
+                          line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
+                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
+                                      width = 3))
+    )%>%
+      layout(
+
+        yaxis = list(
+          type = "category",
+          categoryorder = "array",
+          categoryarray = active$n [order(active$n)])
+      )
+  })
+
+  ## Most mentioned
+  output$mostMentioned <- renderPlotly({
+    progress <- Progress$new(session, min=0, max=15)
+    on.exit(progress$close())
+    
+    progress$set(message = 'Penghitungan akun paling banyak di-mention sedang berlangsung',
+                 detail = 'Ini mungkin memakan waktu cukup lama...')
+    
+    for (i in 1:15) {
+      progress$set(value = i)
+      Sys.sleep(0.5)
+    }
+    mentioned <- df_tweets %>%
+      unnest_tokens(mentions, text, "tweets", to_lower = FALSE) %>%
+      filter(str_detect(mentions, "^@")) %>%
+      count(mentions, sort = TRUE) %>%
+      top_n(10)
+    plot_ly(x = c(mentioned$n [order(mentioned$n)]),
+            y = c(mentioned$mentions [order(mentioned$n)]),
+            type = 'bar', orientation = 'h',
+            marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
+                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
+                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
+                                    'rgba(222, 45, 38,0.6)','rgba(58, 71, 80, 0.6)'),
+                          line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
+                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
+                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
+                                                'rgba(222, 45, 38,1.0)','rgba(58, 71, 80, 1.0)'),
+                                      width = 3))
+    )%>%
+      layout(
+        yaxis = list(
+          type = "category",
+          categoryorder = "array",
+          categoryarray = mentioned$n [order(mentioned$n)])
+      )
+  })
+
+  ## Most used hashtag
+    output$usedHashtag <- renderPlotly({
+    progress <- Progress$new(session, min=0, max=15)
+    on.exit(progress$close())
+    
+    progress$set(message = 'Penghitungan hastag paling banyak digunakan sedang berlangsung',
+                 detail = 'Ini mungkin memakan waktu cukup lama...')
+    
+    for (i in 1:15) {
+      progress$set(value = i)
+      Sys.sleep(0.5)
+    }
+    hashtag <- df_tweets %>%
+      unnest_tokens(hashtag, text, "tweets", to_lower = FALSE) %>%
+      filter(str_detect(hashtag, "^#")) %>%
+      count(hashtag, sort = TRUE) %>%
+      top_n(10)
+    plot_ly(x = c(hashtag$n [order(hashtag$n)]),
+            y = c(hashtag$hashtag [order(hashtag$n)]),
+            type = 'bar',
+            orientation = 'h',
+            marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+                                    'rgba(58, 71, 80, 0.6)','rgba(222, 45, 38,0.6)',
+                                    'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
+                          line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+                                                'rgba(58, 71, 80, 1.0)','rgba(222, 45, 38,1.0)',
+                                                'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
+                                      width = 3))
+    )%>%
+      layout(
+        yaxis = list(
+          type = "category",
+          categoryorder = "array",
+          categoryarray = hashtag$n [order(hashtag$n)])
+      )
+  })
   
   # SENTIMENT
   hitung <- count(df_tweetsCleaned,df_tweetsCleaned$score)
