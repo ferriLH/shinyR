@@ -14,11 +14,6 @@ source('connection.R', local = TRUE)
 source('ui.R', local = TRUE)
 source('server.R', local = TRUE)
 
-# shinyApp(
-#     ui = ui,
-#     server = server
-# )
-
 port <- Sys.getenv('PORT')
 shiny::runApp(
   appDir = getwd(),

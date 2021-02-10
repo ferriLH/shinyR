@@ -2,7 +2,6 @@ my_packages = c(
   "shiny",
   "shiny.semantic",
   "semantic.dashboard",
-  "plyr",
   "ggplot2",
   "plotly",
   "DT",

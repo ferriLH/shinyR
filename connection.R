@@ -1,5 +1,7 @@
+
 # CLOUD CONNECTION
-url_path = 'mongodb+srv://ferrilasmihalim:n71mm1EoRhVstrH0@cluster0.vtl2z.mongodb.net/twitter_data?retryWrites=true&w=majority'
+url_path = 'mongodb+srv://halimferri:EFxyHOxHcso2UVqN@cluster0.nsjwp.mongodb.net/twitter_data?retryWrites=true&w=majority'
+
 conn_raw <- mongo(collection = "twitterDataRaw", db = "twitter_data",
                  url = url_path, verbose = TRUE)
 conn_cleaned <- mongo(collection = "twitterDataTextCleaned", db = "twitter_data",
