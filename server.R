@@ -1,7 +1,34 @@
 
 server <- shinyServer(function(input, output, session) {
   
-  ## Time Series
+  ## TIME SERIES
+  data_ts <- ts_data(df_tweets, "days", 0L, "UTC")
+  
+  output$maxTraff <- renderInfoBox({
+    infoBox(
+      "traffic tertinggi", max(data_ts$n), icon = icon("angle up"),
+      color = "green"
+    )
+  })
+  output$minTraff <- renderInfoBox({
+    infoBox(
+      "traffic terendah", min(data_ts$n), icon = icon("angle down"),
+      color = "red"
+    )
+  })
+  output$meanTraff <- renderInfoBox({
+    infoBox(
+      "Rata-rata traffic", format(round(mean(data_ts$n), 2), nsmall = 2), icon = icon(""),
+      color = "blue"
+    )
+  })
+  output$sumTraff <- renderInfoBox({
+    infoBox(
+      "Total tweet", sum(data_ts$n), icon = icon(""),
+      color = "blue"
+    )
+  })
+  
   output$ts <- renderPlotly({
     progress <- Progress$new(session, min=0, max=15)
     on.exit(progress$close())
@@ -13,15 +40,11 @@ server <- shinyServer(function(input, output, session) {
       progress$set(value = i)
       Sys.sleep(0.5)
     }
-    ts_plot(df_tweets, "days", trim = 0L, tz ="UTC") +
-      ggplot2::theme_minimal() +
-      ggplot2::theme(plot.title = ggplot2::element_text(face = "bold")) +
-      ggplot2::labs(
-        x = NULL, y = NULL,
-        title = "Frekuensi tweet tentang covid-19",
-        subtitle =paste0(strftime(min(df_tweets$created_at), "%d %B %Y"), " to ", strftime(max(df_tweets$created_at),"%d %B %Y")),
-        caption = "\nSource: Data dikumpulkan dari REST API Twitter melalui rtweet"
-      )
+    plot_ly(
+      x = ~data_ts$time, y = ~data_ts$n, type = 'scatter', mode = 'lines', fill = 'tozeroy'
+    )%>% layout(xaxis = list(title = ''),
+                yaxis = list(title = ''))
+    
   })
   
   ## Most Active
@@ -46,25 +69,25 @@ server <- shinyServer(function(input, output, session) {
             orientation = 'h',
             marker = list(color = c('rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
                                     'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
-                                    'rgba(58, 71, 80, 0.6)','rgba(58, 71, 80, 0.6)',
+                                    'rgba(58, 71, 80, 0.6)','rgba(222, 45, 38,0.6)',
                                     'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)',
                                     'rgba(222, 45, 38,0.6)','rgba(222, 45, 38,0.6)'),
                           line = list(color = c('rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
                                                 'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
-                                                'rgba(58, 71, 80, 1.0)','rgba(58, 71, 80, 1.0)',
+                                                'rgba(58, 71, 80, 1.0)','rgba(222, 45, 38,1.0)',
                                                 'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)',
                                                 'rgba(222, 45, 38,1.0)','rgba(222, 45, 38,1.0)'),
                                       width = 3))
     )%>%
       layout(
-
+        
         yaxis = list(
           type = "category",
           categoryorder = "array",
           categoryarray = active$n [order(active$n)])
       )
   })
-
+  
   ## Most mentioned
   output$mostMentioned <- renderPlotly({
     progress <- Progress$new(session, min=0, max=15)
@@ -104,9 +127,9 @@ server <- shinyServer(function(input, output, session) {
           categoryarray = mentioned$n [order(mentioned$n)])
       )
   })
-
+  
   ## Most used hashtag
-    output$usedHashtag <- renderPlotly({
+  output$usedHashtag <- renderPlotly({
     progress <- Progress$new(session, min=0, max=15)
     on.exit(progress$close())
     
@@ -177,7 +200,7 @@ server <- shinyServer(function(input, output, session) {
             hoverinfo = 'text',
             text = ~paste('jumlah score =', jumlah),
             marker = list(colors = colors,
-            line = list(color = '#FFFFFF', width = 1)),
+                          line = list(color = '#FFFFFF', width = 1)),
             showlegend = FALSE
     )%>% 
       layout(
