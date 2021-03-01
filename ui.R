@@ -107,12 +107,28 @@ ui <- shinyUI({dashboardPage(
                  plotlyOutput("sentimentPie")
           )
         ),
-        box(width = 16,
-            title = "Data",
+        box(width = 8,
+            title = "Data Sentimen Positif",
             color = "blue", ribbon = TRUE, title_side = "top right",
             column(width = 16,
-                   h1('Data tweet yang telah dibersihkan'),
-                   DT::dataTableOutput("dataTable"),style = "height:100%;overflow-x: scroll;"
+                   h1('Data sentimen tweet positif'),
+                   DT::dataTableOutput("dataTablePos"),style = "height:100%;overflow-x: scroll;"
+            )
+        ),
+        box(width = 8,
+            title = "Data Sintemen Netral",
+            color = "blue", ribbon = TRUE, title_side = "top right",
+            column(width = 8,
+                   h1('Data sentimen tweet netral'),
+                   DT::dataTableOutput("dataTableNet"),style = "height:100%;overflow-x: scroll;"
+            )
+        ),
+        box(width = 8,
+            title = "Data Sentimen Negatif",
+            color = "blue", ribbon = TRUE, title_side = "top right",
+            column(width = 8,
+                   h1('Data sentimen tweet negatif'),
+                   DT::dataTableOutput("dataTableNeg"),style = "height:100%;overflow-x: scroll;"
             )
         )
       )

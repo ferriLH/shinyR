@@ -6,16 +6,14 @@ library(mongolite)
 library(rtweet)
 
 # CONNECTION
-url_path = 'mongodb+srv://ferrilasmihalim:n71mm1EoRhVstrH0@cluster0.vtl2z.mongodb.net/twitter_data?retryWrites=true&w=majority'
-mng_connRaw <- mongo(collection = "twitterDataRaw", db = "twitter_data",
-                  url = url_path,verbose = TRUE)
-mng_connClean <- mongo(collection = "twitterDataTextCleaned", db = "twitter_data",
-                      url = url_path,verbose = TRUE)
+mng_connRaw <- mongo(collection = "twitterDataRaw", db = "twitter_data")
 
-df_tweets<- read_twitter_csv(file.choose())
-mng_connRaw$insert(df_tweets)
-keeps <- c("status_id", "created_at","text")
-df_tweets <- df_tweets[ , keeps, drop = FALSE]
+df_tweets <- as.data.frame(
+  mng_connRaw$find(
+    query = '{}',
+    field = '{"_id":0,"status_id":1,"text":1}'
+    )
+)
 
 # CASE FOLDING
 df_tweets$text <- casefold(df_tweets$text)
@@ -46,5 +44,4 @@ stemming <- function(x){
 }
 df_tweets$text <- lapply(df_tweets$text[], stemming)
 
-# write_as_csv(df_tweets, "data/cleaned", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
-mng_connClean$insert(df_tweets)
+write_as_csv(df_tweets, "data/cleaned", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")

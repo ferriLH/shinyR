@@ -3,10 +3,9 @@ library(plyr)
 library(stringr)
 library(mongolite)
 
-url_path = 'mongodb+srv://ferrilasmihalim:n71mm1EoRhVstrH0@cluster0.vtl2z.mongodb.net/twitter_data?retryWrites=true&w=majority'
-mng_conn <- mongo(collection = "twitterDataTextCleaned", db = "twitter_data",
-                  url = url_path,verbose = TRUE)
-df_tweets<-as.data.frame(mng_conn$find('{}'))
+mng_conn <- mongo(collection = "twitterDataTextCleaned", db = "twitter_data")
+
+df_tweets <- read_twitter_csv(file.choose())
 
 # add positive negative bank data
 pos <- readLines("data/assets/positive.txt")
@@ -44,5 +43,4 @@ score.sentiment = function(tweets, pos.words, neg.words)
 
 analysis = score.sentiment(df_tweets$text, pos, neg)
 allData <- cbind(df_tweets, score = analysis$score)
-mng_conn$remove('{}') 
 mng_conn$insert(allData)

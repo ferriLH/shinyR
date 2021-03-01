@@ -6,13 +6,13 @@ server <- shinyServer(function(input, output, session) {
   
   output$maxTraff <- renderInfoBox({
     infoBox(
-      "traffic tertinggi", max(data_ts$n), icon = icon("angle up"),
+      "traffic tertinggi", max(data_ts$n), icon = icon(""),
       color = "green"
     )
   })
   output$minTraff <- renderInfoBox({
     infoBox(
-      "traffic terendah", min(data_ts$n), icon = icon("angle down"),
+      "traffic terendah", min(data_ts$n), icon = icon(""),
       color = "red"
     )
   })
@@ -209,6 +209,28 @@ server <- shinyServer(function(input, output, session) {
         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   })
   
-  output$dataTable <- renderDataTable(df_tweetsCleaned, class = 'cell-border stripe')
+  output$dataTablePos <- DT::renderDataTable(DT::datatable({
+    positive <- filter(df_combine, skor > 0)
+    data <- positive %>% 
+      mutate(url = paste0("<a href='", positive$url,"' target='_blank'>", positive$url,"</a>"))
+    data
+  },
+  escape = FALSE))
+  
+  output$dataTableNet <- DT::renderDataTable(DT::datatable({
+    neutral <- filter(df_combine, skor == 0)
+    data <- neutral %>% 
+      mutate(url = paste0("<a href='", neutral$url,"' target='_blank'>", neutral$url,"</a>"))
+    data
+  },
+  escape = FALSE))
+  
+  output$dataTableNeg <- DT::renderDataTable(DT::datatable({
+    negative <- filter(df_combine, skor < 0)
+    data <- negative %>% 
+      mutate(url = paste0("<a href='", negative$url,"' target='_blank'>", negative$url,"</a>"))
+    data
+  },
+  escape = FALSE))
   
 })
